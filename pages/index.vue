@@ -8,6 +8,9 @@
     <div>
       <img src="/VideoToGif_goodSample.gif" alt="Animation" class="start-trainer-img">
     </div>
+    
+    <!-- Gamify~は自前コンポーネント -->
+    <!-- componentsフォルダ参照 -->
     <GamifyList class="start-action-content">
       <GamifyItem class="start-action-content-item">
         <NuxtLink to="/trainer">つづきからはじめる</NuxtLink>

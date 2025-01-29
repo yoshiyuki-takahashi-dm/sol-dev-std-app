@@ -1,9 +1,30 @@
-<script setup></script>
+<script setup>
+// import
+import { ref } from 'vue';
+import GamifyButton from '~/components/GamifyButton.vue';
+
+// 入力した名前state
+const name = ref('');
+
+// ボタン押下に対応するイベント
+const logName = () => {
+  console.log(name.value);
+};
+
+</script>
 
 <template>
   <div>
     <h1>あたらしくはじめる</h1>
-    <form @submit.prevent></form>
+    <p>では　はじめに　きみの　なまえを　おしえて　もらおう！</p>
+    
+    <!-- GamifyButtonではなくてここに対応するメソッドを記述するのがよくわかってない -->
+    <form @submit.prevent="logName">
+      <p>なまえ</p>
+      <p>とくていの　もじは　とりのぞかれるぞ！</p>
+      <input type="text" v-model="name" placeholder="なまえを入力してください">
+      <GamifyButton>けってい</GamifyButton>
+    </form>
   </div>
 </template>
 
