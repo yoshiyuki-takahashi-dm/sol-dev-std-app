@@ -1,4 +1,6 @@
 <script setup>
+
+// すべてrequiredのため、呼び出す親側で必ずデータを渡す
 defineProps({
   id: {
     required: true,
@@ -13,6 +15,8 @@ defineProps({
     type: String,
   },
 });
+
+
 const emits = defineEmits(["close"]);
 const onClose = () => {
   emits("close");
