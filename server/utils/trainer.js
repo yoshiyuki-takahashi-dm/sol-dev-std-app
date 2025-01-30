@@ -6,7 +6,7 @@ import {
 import { NodeHttpHandler } from "@smithy/node-http-handler";
 import { ProxyAgent } from "proxy-agent";
 
-// TODO：vueではimportしてたけどjsでは必要ないのかな
+// TODO：vueではimportしてたけどjsでは必要ないのかな。あとどこのconfig読みに行っている？
 const config = useRuntimeConfig();
 
 const agent = new ProxyAgent();
@@ -38,7 +38,7 @@ export const upsertTrainer = async (name, trainer) => {
 
   const result = await s3Client.send(
     new PutObjectCommand({
-      Bucket: config.bucketName,
+      Bucket: config.bucketName, // nuxt.config.jsだとしたらbucketName: ""だけど、どこでaws configのほうを見に行っている？
       Key: `${name}.json`,
       Body: JSON.stringify({ name: "", pokemons: [], ...trainer }),
     }),
