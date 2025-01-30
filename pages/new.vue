@@ -14,6 +14,7 @@ const config = useRuntimeConfig();
 const trainerName = ref('');
 
 // 確認ダイアログ　はいボタン押下に対応するイベント
+// サーバーエンドAPIをコールする
 const onSubmit = async () => {
   console.log("確認ダイアログで はい が押下されました")
   const response = await $fetch("/api/trainer", {
@@ -27,6 +28,8 @@ const onSubmit = async () => {
     }),
   }).catch((e) => console.log("SubmitError: " + e));
   if (response instanceof Error) return;
+
+  console.log(`/trainer/${trainerName.value}に遷移します`)
   router.push(`/trainer/${trainerName.value}`);
 };
 

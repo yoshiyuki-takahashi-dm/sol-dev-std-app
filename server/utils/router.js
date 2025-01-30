@@ -21,6 +21,7 @@ router.get("/trainers", async (_req, res, next) => {
 
 /** トレーナーの追加 */
 router.post("/trainer", async (req, res, next) => {
+  console.log("POST /trainer に到達しました")
   try {
     // TODO: リクエストボディにトレーナー名が含まれていなければ400を返す
     // TODO: すでにトレーナー（S3 オブジェクト）が存在していれば409を返す

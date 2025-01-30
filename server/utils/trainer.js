@@ -6,6 +6,7 @@ import {
 import { NodeHttpHandler } from "@smithy/node-http-handler";
 import { ProxyAgent } from "proxy-agent";
 
+// TODO：vueではimportしてたけどjsでは必要ないのかな
 const config = useRuntimeConfig();
 
 const agent = new ProxyAgent();
@@ -27,7 +28,14 @@ export const findTrainers = async () => {
 // TODO: トレーナーを取得する S3 クライアント処理の実装
 
 /** トレーナーの追加更新 */
+// サーバーエンドからS3にアクセスする
+// S3アクセスは問題ないのに、サーバーエンド→PokeAPI だとうまくいかないのはなぜだろう
 export const upsertTrainer = async (name, trainer) => {
+  console.log("Execute upsertTrainer")
+  console.log("Runtime Config BucketName: " + config.bucketName)
+  console.log("Request Body Name: " + name)
+  console.log("Request Body: " + trainer)
+
   const result = await s3Client.send(
     new PutObjectCommand({
       Bucket: config.bucketName,
