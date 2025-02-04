@@ -1,4 +1,7 @@
-<script setup></script>
+<script setup>
+  const { data: trainers } = await useTrainers();
+  console.log(trainers)
+</script>
 
 <template>
   <div class="start-content">
@@ -12,7 +15,7 @@
     <!-- Gamify~は自前コンポーネント -->
     <!-- componentsフォルダ参照 -->
     <GamifyList class="start-action-content">
-      <GamifyItem class="start-action-content-item">
+      <GamifyItem v-if="trainers.length > 0" class="start-action-content-item">
         <NuxtLink to="/trainer">つづきからはじめる</NuxtLink>
       </GamifyItem>
       <GamifyItem class="start-action-content-item">
