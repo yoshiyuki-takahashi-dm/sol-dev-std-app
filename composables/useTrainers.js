@@ -7,5 +7,10 @@ export default () => {
     server: false,
     baseURL: config.public.backendOrigin,
   });
+
+  // expressサーバーから取得したresponseをフロント側のログに表示する
+  console.log("respones from express server")
+  console.log(response)
+
   return response;
 };

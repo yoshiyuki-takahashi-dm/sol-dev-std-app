@@ -12,8 +12,11 @@ router.get("/hello", (_req, res) => {
 router.get("/trainers", async (_req, res, next) => {
   try {
     const trainers = await findTrainers();
-    // TODO: 期待するレスポンスボディに変更する
-    res.send(trainers);
+    // 期待するレスポンスボディに変更する
+    const trainerList = trainers.map(({ Key }) => Key.replace(/\.json$/, ""));
+    console.log("mapping response at express server")
+    console.log(trainerList)
+    res.send(trainerList);
   } catch (err) {
     next(err);
   }

@@ -1,6 +1,5 @@
 <script setup>
   const { data: trainers } = await useTrainers();
-  console.log(trainers)
 </script>
 
 <template>
