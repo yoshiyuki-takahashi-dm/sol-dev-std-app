@@ -2,13 +2,13 @@
 export default () => {
   // デフォルトはデモモードではない
   const _isDemo = ref(false);
-  const onStartDemo = (value) => {
+  const onStartDemo = () => {
     console.log("デモモードを開始します")
-    _isDemo.value = value;
+    _isDemo.value = true;
   };
-  const onEndDemo = (value) => {
+  const onEndDemo = () => {
     console.log("デモモードを終了します")
-    _isDemo.value = value;
+    _isDemo.value = false;
   };
   return {
     isDemo: _isDemo,

@@ -24,8 +24,8 @@
     </div>
 
     <!-- デモモードボタン -->
-    <GamifyButton @click="{onStartDemo(true); console.log(trainers)}" >デモにする</GamifyButton>
-    <GamifyButton @click="{onEndDemo(false); console.log(trainers)}" >デモにしない</GamifyButton>
+    <GamifyButton @click="{onStartDemo(); console.log(trainers)}" >デモにする</GamifyButton>
+    <GamifyButton @click="{onEndDemo(); console.log(trainers)}" >デモにしない</GamifyButton>
     
     <!-- Gamify~は自前コンポーネント -->
     <!-- componentsフォルダ参照 -->

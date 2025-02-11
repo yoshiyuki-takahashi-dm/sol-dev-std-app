@@ -29,6 +29,7 @@ const onSubmit = async () => {
   }).catch((e) => console.log("SubmitError: " + e));
   if (response instanceof Error) return;
 
+  // Submitに成功したら、トレーナー名をもとにトレーナーページに遷移
   console.log(`/trainer/${trainerName.value}に遷移します`)
   router.push(`/trainer/${trainerName.value}`);
 };
