@@ -1,5 +1,17 @@
 <script setup>
-  const { data: trainers } = await useTrainers();
+  import { watch } from 'vue';
+  import { useDemo } from '#imports';
+  // デモかどうかカスタムフック
+  const { isDemo, onStartDemo, onEndDemo } = useDemo();
+  console.log("デモモードかどうか: " + isDemo.value);
+  var { data: trainers } = await useTrainers(isDemo.value);
+
+  // isDemoが変更されたら再描画
+  // なぜかこれがないとデモモードボタン押下後の画面更新がされない
+  watch(isDemo, async (newVal) => {
+    console.log("デモモードかどうか: " + newVal);
+    trainers  = await useTrainers(newVal);
+  });
 </script>
 
 <template>
@@ -10,6 +22,10 @@
     <div>
       <img src="/VideoToGif_goodSample.gif" alt="Animation" class="start-trainer-img">
     </div>
+
+    <!-- デモモードボタン -->
+    <GamifyButton @click="{onStartDemo(true); console.log(trainers)}" >デモにする</GamifyButton>
+    <GamifyButton @click="{onEndDemo(false); console.log(trainers)}" >デモにしない</GamifyButton>
     
     <!-- Gamify~は自前コンポーネント -->
     <!-- componentsフォルダ参照 -->
@@ -47,6 +63,14 @@
   margin-left: 20px; /* 必要に応じてマージンを調整 */
   margin-right: 20px; /* 必要に応じてマージンを調整 */
 }
+
+/* デモモードトグルボタン */
+.toggle-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
 </style>
 
 
