@@ -23,8 +23,10 @@ console.log("Trainer: " + trainer);
     <h1>てもちポケモン</h1>
 
     <!-- ぽけもんげっとボタン -->
-    <GamifyButton src="pokemon_ball.svg" alt="Icon">
-      ポケモンをつかまえる</GamifyButton>
+      <GamifyButton>
+        <img src="/pokemon_ball.svg" class="pokemon-ball-img">
+        ポケモンをつかまえる
+      </GamifyButton>
 
     <!-- てもちぽけもん リスト-->
     <GamifyList>
