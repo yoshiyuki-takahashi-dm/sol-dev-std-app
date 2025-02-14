@@ -24,7 +24,7 @@ console.log("Trainer: " + trainer);
     <h1>てもちポケモン</h1>
 
     <!-- ぽけもんげっとボタン -->
-      <CatchButton>
+      <CatchButton :to="`/trainer/${router.params.name}/catch`">
         ポケモンをつかまえる
       </CatchButton>
 
