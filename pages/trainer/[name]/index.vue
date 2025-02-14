@@ -24,6 +24,7 @@ console.log("Trainer: " + trainer);
     <h1>てもちポケモン</h1>
 
     <!-- ぽけもんげっとボタン -->
+     <!-- パスパラメータからトレーナー名（name）を取得して、続くcatchページに遷移する -->
       <CatchButton :to="`/trainer/${router.params.name}/catch`">
         ポケモンをつかまえる
       </CatchButton>
