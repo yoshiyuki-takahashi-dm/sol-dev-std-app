@@ -1,5 +1,6 @@
 <script setup>
 import { useRoute } from 'vue-router';
+import CatchButton from '~/components/CatchButton.vue';
 
 const router = useRoute();
 const trainer = router.params.name; // パスパラメータからnameを取得
@@ -23,10 +24,9 @@ console.log("Trainer: " + trainer);
     <h1>てもちポケモン</h1>
 
     <!-- ぽけもんげっとボタン -->
-      <GamifyButton>
-        <img src="/pokemon_ball.svg" class="pokemon-ball-img">
+      <CatchButton>
         ポケモンをつかまえる
-      </GamifyButton>
+      </CatchButton>
 
     <!-- てもちぽけもん リスト-->
     <GamifyList>
