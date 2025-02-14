@@ -2,8 +2,8 @@
 import { useRoute } from 'vue-router';
 import CatchButton from '~/components/CatchButton.vue';
 
-const router = useRoute();
-const trainer = router.params.name; // パスパラメータからnameを取得
+const route = useRoute();
+const trainer = route.params.name; // パスパラメータからnameを取得
 console.log("Trainer: " + trainer);
 </script>
 
@@ -25,7 +25,7 @@ console.log("Trainer: " + trainer);
 
     <!-- ぽけもんげっとボタン -->
      <!-- パスパラメータからトレーナー名（name）を取得して、続くcatchページに遷移する -->
-      <CatchButton :to="`/trainer/${router.params.name}/catch`">
+      <CatchButton :to="`/trainer/${route.params.name}/catch`">
         ポケモンをつかまえる
       </CatchButton>
 
