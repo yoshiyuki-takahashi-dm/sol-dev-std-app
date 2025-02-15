@@ -6,6 +6,9 @@
   console.log("デモモードかどうか: " + isDemo.value);
   var { data: trainers } = await useTrainers(isDemo.value);
 
+  // ポケモン一覧を取得
+  var { pokemonList: pokemons } = await usePokemonList();
+
   // isDemoが変更されたら再描画
   // なぜかこれがないとデモモードボタン押下後の画面更新がされない
   watch(isDemo, async (newVal) => {
