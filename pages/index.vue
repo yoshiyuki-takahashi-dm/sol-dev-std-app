@@ -2,14 +2,14 @@
   import { watch } from 'vue';
   import { useDemo } from '#imports';
   import { usePokemonList } from '#imports';
-  
+
   // デモかどうかカスタムフック
   const { isDemo, onStartDemo, onEndDemo } = useDemo();
   console.log("デモモードかどうか: " + isDemo.value);
   var { data: trainers } = await useTrainers(isDemo.value);
 
   // ポケモン一覧を取得
-  var { pokemonList: pokemons } = await usePokemonList();
+  var { pokemonList } = await usePokemonList();
 
   // isDemoが変更されたら再描画
   // なぜかこれがないとデモモードボタン押下後の画面更新がされない
