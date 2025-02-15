@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { findTrainers, upsertTrainer } from "~/server/utils/trainer";
-import { findPokemon } from "~/server/utils/pokemon";
+import { findPokemon, getPokemonList } from "~/server/utils/pokemon";
 
 const router = Router();
 
@@ -52,6 +52,22 @@ router.post("/trainer/:trainerName", async (req, res, next) => {
 
 /** トレーナーの削除 */
 // TODO: トレーナーを削除する API エンドポイントの実装
+
+/** ポケモンの一覧取得 */
+router.get("/pokemonList", async (_req, res, next) => {
+  try {
+    const pokemons = await getPokemonList();
+    console.log("getPokemonListまでは成功")
+    // 期待するレスポンスボディに変更する
+    const pokemonList = pokemons.map(({ Key }) => Key.replace(/\.json$/, ""));
+    console.log("mapping response at express server")
+    console.log("ポケモンリスト" + pokemonList)
+    res.send(pokemonList);
+  } catch (err) {
+    next(err);
+  }
+});
+
 
 /** ポケモンの追加 */
 router.post("/trainer/:trainerName/pokemon", async (req, res, next) => {

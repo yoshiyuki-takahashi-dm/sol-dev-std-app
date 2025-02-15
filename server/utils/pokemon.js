@@ -12,3 +12,16 @@ export const findPokemon = async (name) => {
   });
   return pokemon;
 };
+
+/** ポケモン一覧の取得 */
+export const getPokemonList = async () => {
+  const offset = 0;
+  const limit = 10;
+  const pokemons = await ofetch(`https://pokeapi.co/api/v2/pokemon?offset=${offset}&limit=${limit}`, {
+    dispatcher: envHttpProxyAgent,
+  });
+
+  console.log("getPokemonList at express server")
+  console.log("getPokemonList" + pokemons)
+  return pokemons ?? [];
+}
