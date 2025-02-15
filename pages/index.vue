@@ -1,6 +1,8 @@
 <script setup>
   import { watch } from 'vue';
   import { useDemo } from '#imports';
+  import { usePokemonList } from '#imports';
+  
   // デモかどうかカスタムフック
   const { isDemo, onStartDemo, onEndDemo } = useDemo();
   console.log("デモモードかどうか: " + isDemo.value);
