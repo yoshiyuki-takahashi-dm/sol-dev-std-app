@@ -84,10 +84,13 @@ const getPokemonDetails = async () => {
         )
         const detail = await response.json();
         console.log("単純fetchのresponseをjson変換したもの: " + detail);
+
+        // 取得した詳細情報から、タイプ、画像（前後）を取得
         types = detail.types;
         pokemonFrontDefaultImg = detail.sprites.front_default;
         pokemonBackDefaultImg = detail.sprites.back_default;
-        // console.log("タイプは " + types);
+
+        // 一覧情報と詳細情報を結合してtmpリストに追加
         tmpList.push({
             ...pokemonResult,
             types,
@@ -97,6 +100,7 @@ const getPokemonDetails = async () => {
         pokemonsWithDetailsListLength.value = tmpList.length;
     }
 
+    // ポケモン詳細情報リストを更新
     pokemonsWithDetailsList.value = tmpList;
 
     console.log("詳細情報: " + pokemonsWithDetailsList.value);
@@ -104,6 +108,7 @@ const getPokemonDetails = async () => {
     catch (err) {
         error.value = err;
     }finally {
+        // なにか最後にやりたい処理があればここに書く
     }
 }
 </script>
