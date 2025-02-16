@@ -23,7 +23,7 @@ import GamifyButton from '~/components/GamifyButton.vue';
 <template>
   <div class="start-content">
     <h1>ポケットモンスター</h1>
-    <h2>POCEKT  MONSTER</h2>
+    <h2>POCKET  MONSTER</h2>
     <h3>Solution Developer Standard Version</h3>
     <div>
       <img src="/VideoToGif_goodSample.gif" alt="Animation" class="start-trainer-img">
