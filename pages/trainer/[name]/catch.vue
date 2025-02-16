@@ -8,6 +8,8 @@ var data = null;
 var pokemons = null;
 var pokemonsWithDetailsList = ref([]);
 var types = null;
+var pokemonFrontDefaultImg = null;
+var pokemonBackDefaultImg = null;
 var pokemonsWithDetailsListLength = ref(0); 
 
 // ローディング中かどうか
@@ -83,10 +85,14 @@ const getPokemonDetails = async () => {
         const detail = await response.json();
         console.log("単純fetchのresponseをjson変換したもの: " + detail);
         types = detail.types;
-        console.log("タイプは " + types);
+        pokemonFrontDefaultImg = detail.sprites.front_default;
+        pokemonBackDefaultImg = detail.sprites.back_default;
+        // console.log("タイプは " + types);
         tmpList.push({
             ...pokemonResult,
             types,
+            imgFront: pokemonFrontDefaultImg,
+            imgBack: pokemonBackDefaultImg,
         });
         pokemonsWithDetailsListLength.value = tmpList.length;
     }
@@ -117,6 +123,8 @@ const getPokemonDetails = async () => {
         <h2>詳細情報を追加したポケモン一覧　確認用</h2>
         <GamifyList>
             <li v-for="(pokemonWithDetails, id) in pokemonsWithDetailsList" :key="id">
+                <img :src="pokemonWithDetails.imgFront" alt="ポケモンフロント画像">
+                <img :src="pokemonWithDetails.imgBack" alt="ポケモンバック画像">
                 {{ pokemonWithDetails }}
             </li>
         </GamifyList>
