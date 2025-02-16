@@ -10,7 +10,7 @@ import GamifyButton from '~/components/GamifyButton.vue';
   var { data: trainers } = await useTrainers(isDemo.value);
 
   // ポケモン一覧を取得
-  var { pokemonList } = await usePokemonList();
+  // var { pokemonList } = await usePokemonList();
 
   // isDemoが変更されたら再描画
   // なぜかこれがないとデモモードボタン押下後の画面更新がされない
