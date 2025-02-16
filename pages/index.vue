@@ -34,7 +34,7 @@ import GamifyButton from '~/components/GamifyButton.vue';
     <GamifyButton @click="{onEndDemo(); console.log(trainers)}" >デモにしない</GamifyButton>
     
     <!-- ポケモンリストを取得できたかコンソールに出すボタン -->
-    <GamifyButton @click="console.log(pokemonList)" >ポケモンリストを取得</GamifyButton>
+    <!-- <GamifyButton @click="console.log(pokemonList)" >ポケモンリストを取得</GamifyButton> -->
     
     <!-- Gamify~は自前コンポーネント -->
     <!-- componentsフォルダ参照 -->
