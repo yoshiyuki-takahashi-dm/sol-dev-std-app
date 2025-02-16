@@ -2,6 +2,7 @@
   import { watch } from 'vue';
   import { useDemo } from '#imports';
   import { usePokemonList } from '#imports';
+import GamifyButton from '~/components/GamifyButton.vue';
 
   // デモかどうかカスタムフック
   const { isDemo, onStartDemo, onEndDemo } = useDemo();
@@ -9,7 +10,7 @@
   var { data: trainers } = await useTrainers(isDemo.value);
 
   // ポケモン一覧を取得
-  // var { pokemonList } = await usePokemonList();
+  var { pokemonList } = await usePokemonList();
 
   // isDemoが変更されたら再描画
   // なぜかこれがないとデモモードボタン押下後の画面更新がされない
@@ -31,6 +32,9 @@
     <!-- デモモードボタン -->
     <GamifyButton @click="{onStartDemo(); console.log(trainers)}" >デモにする</GamifyButton>
     <GamifyButton @click="{onEndDemo(); console.log(trainers)}" >デモにしない</GamifyButton>
+    
+    <!-- ポケモンリストを取得できたかコンソールに出すボタン -->
+    <GamifyButton @click="console.log(pokemonList)" >ポケモンリストを取得</GamifyButton>
     
     <!-- Gamify~は自前コンポーネント -->
     <!-- componentsフォルダ参照 -->
