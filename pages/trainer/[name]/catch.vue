@@ -175,10 +175,10 @@ const clearSelectedTypes = () => {
             <!-- ポケモン詳細情報を取得するボタン -->
             <div v-if="isExistPokemonDetails">
                 <!-- TODO -->
-                <!-- 選択タイプに基づいて詳細情報リストにフィルタをかける -->
                 <!-- 選択タイプはどこかに表示する -->
                 <!-- 既存のgetPokemonDetailsに選択タイプをわたすのがよさそう。指定なしの場合は全てにして。 -->
                 <GamifyButton @click="() => {clearSelectedTypes(); onTypeColorDialogOpen()}">なにタイプがほしい？</GamifyButton>
+                <span>選択タイプ: {{ selectedTypes }}</span>
             </div>
         </div>
 
@@ -215,14 +215,14 @@ const clearSelectedTypes = () => {
 
         <!-- タイプ選択ダイアログ -->
         <GamifyDialog v-if="typeColorDialog" id="confirm-catch" title="かくにん" :description="`タイプを２しゅるい えらぶのじゃ`"
-            @close="onTypeColorDialogClose">
+            @close="() => {clearSelectedTypes(); onTypeColorDialogClose()}">
             <div class="type-selection-dialog-item">
                 <TypeColorWheel @select-types="selectTypesEvent" />
             </div>
 
             <GamifyItem>
                 <!-- 完了ボタンで閉じた場合は、選択タイプでポケモン一覧を取得しなおす -->
-                <GamifyButton @click="() => { onTypeColorDialogClose(), getPokemonDetails(); }">完了</GamifyButton>
+                <GamifyButton @click="() => { onTypeColorDialogClose(); getPokemonDetails(); }">完了</GamifyButton>
             </GamifyItem>
 
         </GamifyDialog>
