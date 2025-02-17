@@ -162,7 +162,7 @@ const clearSelectedTypes = () => {
 <template>
     <div>
         <h1>ポケモンをつかまえる画面だよ</h1>
-        <h2>次やること：フィルタはORではなくANDにしてかける</h2>
+        <h2>次やること：フィルタはORではなくANDにしてかける。一度詳細取得していたら再度とらないようにする。</h2>
         <h3>{{ pokemons.count }} しゅるいのポケモン</h3>
         <h3>{{ pokemonsWithDetailsListLength }} / {{ pokemons.count }} 詳細取得済</h3>
         <div v-if="loading">読み込み中...</div>
@@ -196,7 +196,7 @@ const clearSelectedTypes = () => {
                 </span>
                 <!-- 選択タイプを空にしてからダイアログを開く -->
                 <GamifyButton @click="onOpen(pokemonWithDetails.name);">つかまえる</GamifyButton>
-                {{ pokemonWithDetails }}
+                <!-- {{ pokemonWithDetails }} -->
             </GamifyItem>
         </GamifyList>
 
@@ -226,16 +226,6 @@ const clearSelectedTypes = () => {
             </GamifyItem>
 
         </GamifyDialog>
-
-
-        <!-- <h2>ポケモン一覧</h2>
-        <GamifyList>
-            <li v-for="(pokemon, id) in pokemons.results" :key="id">
-                {{ pokemon.name }}
-                <GamifyButton>つかまえる</GamifyButton>
-            </li>
-        </GamifyList> -->
-
     </div>
 </template>
 
