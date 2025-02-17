@@ -11,6 +11,7 @@ var types = null;
 var pokemonFrontDefaultImg = null;
 var pokemonBackDefaultImg = null;
 var pokemonsWithDetailsListLength = ref(0);
+var isExistPokemonDetails = ref(false);
 
 // ローディング中かどうか
 const loading = ref(true);
@@ -68,6 +69,9 @@ finally {
     }
 }
 
+// ダイアログのカスタムフック
+const { dialog, onOpen, onClose } = useDialog();
+
 const getPokemonDetails = async () => {
     // 更新前にクリア
     pokemonsWithDetailsList.value = [];
@@ -111,6 +115,7 @@ const getPokemonDetails = async () => {
         error.value = err;
     } finally {
         // なにか最後にやりたい処理があればここに書く
+        isExistPokemonDetails.value = true;
     }
 }
 </script>
@@ -118,15 +123,28 @@ const getPokemonDetails = async () => {
 <template>
     <div>
         <h1>ポケモンをつかまえる画面だよ</h1>
-        <h2>次やること：ポケモン画像</h2>
+        <h2>次やること：詳細取得した後にフィルタかける</h2>
         <h3>{{ pokemons.count }} しゅるいのポケモン</h3>
         <h3>{{ pokemonsWithDetailsListLength }} / {{ pokemons.count }} 詳細取得済</h3>
         <div v-if="loading">読み込み中...</div>
         <div v-else-if="error">エラーが発生しました: {{ error.message }}</div>
 
-        <!-- ポケモン詳細情報を取得するボタン -->
-        <GamifyButton @click="getPokemonDetails()">詳細情報を取得</GamifyButton>
+        <!-- ポケモン詳細の操作 -->
+        <div class="details-action-item">
+            <!-- ポケモン詳細情報を取得するボタン -->
+            <GamifyButton @click="getPokemonDetails()">くわしく GETだぜ</GamifyButton>
+            <!-- ポケモン詳細情報を取得するボタン -->
+            <div v-if="isExistPokemonDetails">
+                <!-- TODO -->
+                <!-- タイプを最大２つ選択するダイアログを表示するボタン -->
+                <!-- 選択タイプに基づいて詳細情報リストにフィルタをかける -->
+                <!-- 選択タイプはどこかに表示する -->
+                <!-- 既存のgetPokemonDetailsに選択タイプをわたすのがよさそう。指定なしの場合は全てにして。 -->
+                <GamifyButton>なにタイプがほしい？</GamifyButton>
+            </div>
+        </div>
 
+        <!-- ポケモン一覧 -->
         <h2>ポケモン一覧</h2>
         <GamifyList>
             <GamifyItem v-for="(pokemonWithDetails, id) in pokemonsWithDetailsList" :key="id">
@@ -138,10 +156,28 @@ const getPokemonDetails = async () => {
                 <span class="pokemon-name">
                     {{ pokemonWithDetails.name }}
                 </span>
-                <GamifyButton>つかまえる</GamifyButton>
+                <GamifyButton @click="onOpen(pokemonWithDetails.name)">つかまえる</GamifyButton>
                 {{ pokemonWithDetails }}
             </GamifyItem>
         </GamifyList>
+
+        <!-- 確認ダイアログ -->
+        <GamifyDialog 
+            v-if="dialog" 
+            id="confirm-catch" 
+            title="かくにん" 
+            :description="`ほう！　${dialog.name}　にするんじゃな？`"
+            @close="onClose">
+            <GamifyList :border="false" direction="horizon">
+                <GamifyItem>
+                    <GamifyButton @click="onClose">いいえ</GamifyButton>
+                </GamifyItem>
+                <GamifyItem>
+                    <GamifyButton @click="onCatch(dialog)">はい</GamifyButton>
+                </GamifyItem>
+            </GamifyList>
+        </GamifyDialog>
+        
 
         <!-- <h2>ポケモン一覧</h2>
         <GamifyList>
@@ -154,4 +190,10 @@ const getPokemonDetails = async () => {
     </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.details-action-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 2px;
+}
+</style>
