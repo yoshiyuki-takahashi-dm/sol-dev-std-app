@@ -28,8 +28,8 @@ const error = ref(null);
 const offset = 0;
 
 // ポケモン一覧取得時のリミット
-// 指定しないと20になって少ないので、10000に設定
-// TODO：ユーザー操作でフィルタかけるようにする。100体超える場合は「多いから減らせ」的なメッセージを表示する
+// 指定しないと20になって少ない
+// MAXほしい場合は1034に設定
 const limit = 100;
 
 // ポケモン一覧取得
@@ -130,14 +130,14 @@ const getPokemonDetails = async () => {
             console.log("選択されたタイプ: " + selectedTypes);
             // フィルタリング
             var filteredList = pokemonsWithDetailsListMaster.filter((pokemon) => {
-                var isMatched = false;
-                for (const type of pokemon.types) {
-                    if (selectedTypes.includes(type.type.name)) {
-                        isMatched = true;
-                        break;
-                    }
+                if (selectedTypes.length === 1) {
+                    // 1つのタイプでフィルタリング
+                    return pokemon.types.some(type => selectedTypes.includes(type.type.name));
+                } else if (selectedTypes.length === 2) {
+                    // 2つのタイプでフィルタリング (AND)
+                    return selectedTypes.every(selectedType => pokemon.types.some(type => type.type.name === selectedType));
                 }
-                return isMatched;
+                return true;
             });
             pokemonsWithDetailsListToShow.value = filteredList;
         } else {
@@ -167,7 +167,7 @@ const clearSelectedTypes = () => {
 <template>
     <div>
         <h1>ポケモンをつかまえる画面だよ</h1>
-        <h2>次やること：フィルタはORではなくANDにしてかける。一度詳細取得していたら再度とらないようにする。</h2>
+        <h2>次やること：フィルタはORではなくANDにしてかける。</h2>
         <h3>{{ pokemons.count }} しゅるいのポケモン</h3>
         <h3>{{ pokemonsWithDetailsListLength }} / {{ pokemons.count }} 詳細取得済</h3>
         <div v-if="loading">読み込み中...</div>
