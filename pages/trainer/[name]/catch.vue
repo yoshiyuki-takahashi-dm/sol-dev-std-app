@@ -115,22 +115,46 @@ const getPokemonDetails = async () => {
 
         // ポケモン詳細情報リストを更新
         pokemonsWithDetailsList.value = tmpList;
-
         console.log("詳細情報: " + pokemonsWithDetailsList.value);
     }
     catch (err) {
         error.value = err;
     } finally {
-        // なにか最後にやりたい処理があればここに書く
+        // タイプフィルタ
+        if (selectedTypes.length > 0) {
+            console.log("選択されたタイプでフィルタリング");
+            console.log("選択されたタイプ: " + selectedTypes);
+            // フィルタリング
+            var filteredList = pokemonsWithDetailsList.value.filter((pokemon) => {
+                var isMatched = false;
+                for (const type of pokemon.types) {
+                    if (selectedTypes.includes(type.type.name)) {
+                        isMatched = true;
+                        break;
+                    }
+                }
+                return isMatched;
+            });
+            pokemonsWithDetailsList.value = filteredList;
+        }else{
+            console.log("選択されたタイプがないので全て表示");
+        }
+        
+        // 詳細取得済フラグを立てる
         isExistPokemonDetails.value = true;
     }
 }
 
 // タイプ選択ダイアログの色相環から選択されたタイプを取得
 const selectTypesEvent = (selectTypes) => {
-    console.log(`${selectTypes}を選択しました`);
     selectedTypes = selectTypes;
     console.log(`${selectedTypes}を選択しました`);
+};
+
+// タイプ選択を空にする
+const clearSelectedTypes = () => {
+    console.log("選択タイプを空にします");
+    selectedTypes = [];
 };
 
 </script>
@@ -138,7 +162,7 @@ const selectTypesEvent = (selectTypes) => {
 <template>
     <div>
         <h1>ポケモンをつかまえる画面だよ</h1>
-        <h2>次やること：詳細取得した後にフィルタかける</h2>
+        <h2>次やること：フィルタはORではなくANDにしてかける</h2>
         <h3>{{ pokemons.count }} しゅるいのポケモン</h3>
         <h3>{{ pokemonsWithDetailsListLength }} / {{ pokemons.count }} 詳細取得済</h3>
         <div v-if="loading">読み込み中...</div>
@@ -151,11 +175,10 @@ const selectTypesEvent = (selectTypes) => {
             <!-- ポケモン詳細情報を取得するボタン -->
             <div v-if="isExistPokemonDetails">
                 <!-- TODO -->
-                <!-- タイプを最大２つ選択するダイアログを表示するボタン -->
                 <!-- 選択タイプに基づいて詳細情報リストにフィルタをかける -->
                 <!-- 選択タイプはどこかに表示する -->
                 <!-- 既存のgetPokemonDetailsに選択タイプをわたすのがよさそう。指定なしの場合は全てにして。 -->
-                <GamifyButton @click="onTypeColorDialogOpen()">なにタイプがほしい？</GamifyButton>
+                <GamifyButton @click="() => {clearSelectedTypes(); onTypeColorDialogOpen()}">なにタイプがほしい？</GamifyButton>
             </div>
         </div>
 
@@ -171,7 +194,8 @@ const selectTypesEvent = (selectTypes) => {
                 <span class="pokemon-name">
                     {{ pokemonWithDetails.name }}
                 </span>
-                <GamifyButton @click="onOpen(pokemonWithDetails.name)">つかまえる</GamifyButton>
+                <!-- 選択タイプを空にしてからダイアログを開く -->
+                <GamifyButton @click="onOpen(pokemonWithDetails.name);">つかまえる</GamifyButton>
                 {{ pokemonWithDetails }}
             </GamifyItem>
         </GamifyList>
@@ -197,7 +221,8 @@ const selectTypesEvent = (selectTypes) => {
             </div>
 
             <GamifyItem>
-                <GamifyButton @click="onTypeColorDialogClose">完了</GamifyButton>
+                <!-- 完了ボタンで閉じた場合は、選択タイプでポケモン一覧を取得しなおす -->
+                <GamifyButton @click="() => { onTypeColorDialogClose(), getPokemonDetails(); }">完了</GamifyButton>
             </GamifyItem>
 
         </GamifyDialog>

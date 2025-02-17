@@ -1,12 +1,12 @@
-// トレーナー名入力の確認ダイアログ　カスタムフック
+// ポケモンタイプ選択ダイアログ　カスタムフック
 export default () => {
   const typeColorDialog = ref(null);
   const onTypeColorDialogOpen = () => {
-    console.log("確認ダイアログを開きます")
+    console.log("ポケモンタイプ選択ダイアログを開きます")
     typeColorDialog.value = "hoge";
   };
   const onTypeColorDialogClose = () => {
-    console.log("確認ダイアログを閉じます")
+    console.log("ポケモンタイプ選択ダイアログを閉じます")
     typeColorDialog.value = null;
   };
   return {

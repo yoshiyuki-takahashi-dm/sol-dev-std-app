@@ -25,31 +25,31 @@ const selectedTypes = ref([]);
 
 // ポケモン18タイプに対応する文字列の配列
 const types = ref([
-    'Fire', 'Water', 'Grass', 'Electric', 'Ice', 'Fighting',
-    'Poison', 'Ground', 'Flying', 'Psychic', 'Bug', 'Rock',
-    'Ghost', 'Dragon', 'Dark', 'Steel', 'Fairy', 'Normal'
+    'fire', 'water', 'grass', 'electric', 'ice', 'fighting',
+    'poison', 'ground', 'flying', 'psychic', 'bug', 'rock',
+    'ghost', 'dragon', 'dark', 'steel', 'fairy', 'normal'
 ]);
 
 // タイプに対応するカラーコードのマッピング
 const typeColors = {
-    'Fire': '#FF4500',
-    'Water': '#1E90FF',
-    'Grass': '#32CD32',
-    'Electric': '#FFD700',
-    'Ice': '#00FFFF',
-    'Fighting': '#8B0000',
-    'Poison': '#9400D3',
-    'Ground': '#DEB887',
-    'Flying': '#87CEEB',
-    'Psychic': '#FF1493',
-    'Bug': '#ADFF2F',
-    'Rock': '#A52A2A',
-    'Ghost': '#4B0082',
-    'Dragon': '#00008B',
-    'Dark': '#2F4F4F',
-    'Steel': '#B0C4DE',
-    'Fairy': '#FFB6C1',
-    'Normal': '#D3D3D3'
+    'fire': '#FF4500',
+    'water': '#1E90FF',
+    'grass': '#32CD32',
+    'electric': '#FFD700',
+    'ice': '#00FFFF',
+    'fighting': '#8B0000',
+    'poison': '#9400D3',
+    'ground': '#DEB887',
+    'flying': '#87CEEB',
+    'psychic': '#FF1493',
+    'bug': '#ADFF2F',
+    'rock': '#A52A2A',
+    'ghost': '#4B0082',
+    'dragon': '#00008B',
+    'dark': '#2F4F4F',
+    'steel': '#B0C4DE',
+    'fairy': '#FFB6C1',
+    'normal': '#D3D3D3'
 };
 
 // ツールチップの状態を管理するためのリアクティブなオブジェクト
