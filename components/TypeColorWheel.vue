@@ -91,6 +91,16 @@ const selectType = (type) => {
     selectedTypes.value.forEach((type, index) => {
         console.log(`Type ${index + 1}: ${type}`);
     });
+
+    // 選択したタイプを親コンポーネントに通知
+    typeClickHandle();
+};
+
+// 選択したタイプを親コンポーネントに通知するカスタムイベント
+const emit = defineEmits(['selectTypes']);
+const typeClickHandle = () => {
+    // カスタムイベントの発行(第2引数はイベントと一緒に伝えたい値)
+    emit('selectTypes', selectedTypes.value);
 };
 
 </script>

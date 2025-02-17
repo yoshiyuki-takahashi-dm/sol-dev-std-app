@@ -15,6 +15,7 @@ var pokemonFrontDefaultImg = null;
 var pokemonBackDefaultImg = null;
 var pokemonsWithDetailsListLength = ref(0);
 var isExistPokemonDetails = ref(false);
+var selectedTypes = [];
 
 // ローディング中かどうか
 const loading = ref(true);
@@ -124,6 +125,14 @@ const getPokemonDetails = async () => {
         isExistPokemonDetails.value = true;
     }
 }
+
+// タイプ選択ダイアログの色相環から選択されたタイプを取得
+const selectTypesEvent = (selectTypes) => {
+    console.log(`${selectTypes}を選択しました`);
+    selectedTypes = selectTypes;
+    console.log(`${selectedTypes}を選択しました`);
+};
+
 </script>
 
 <template>
@@ -184,7 +193,7 @@ const getPokemonDetails = async () => {
         <GamifyDialog v-if="typeColorDialog" id="confirm-catch" title="かくにん" :description="`タイプを２しゅるい えらぶのじゃ`"
             @close="onTypeColorDialogClose">
             <div class="type-selection-dialog-item">
-                <TypeColorWheel />
+                <TypeColorWheel @select-types="selectTypesEvent" />
             </div>
 
             <GamifyItem>
