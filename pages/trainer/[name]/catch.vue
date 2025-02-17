@@ -185,7 +185,6 @@ const getPokemonDetails = async () => {
             @close="onTypeColorDialogClose">
             <div class="type-selection-dialog-item">
                 <TypeColorWheel />
-                <TypeColorWheel />
             </div>
 
             <GamifyItem>
