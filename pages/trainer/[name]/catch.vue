@@ -1,4 +1,7 @@
 <script setup>
+import useTypeColorDialogDialog from '~/composables/useTypeColorDialog.js';
+import TypeColorWheel from '~/components/TypeColorWheel.vue';
+
 const route = useRoute(); // 現在のルート情報にアクセスするためのフック
 const router = useRouter(); // ルーターを使うためのフック
 const config = useRuntimeConfig();
@@ -72,6 +75,9 @@ finally {
 // ダイアログのカスタムフック
 const { dialog, onOpen, onClose } = useDialog();
 
+// タイプ選択ダイアログのカスタムフック
+const { typeColorDialog, onTypeColorDialogOpen, onTypeColorDialogClose } = useTypeColorDialogDialog();
+
 const getPokemonDetails = async () => {
     // 更新前にクリア
     pokemonsWithDetailsList.value = [];
@@ -140,7 +146,7 @@ const getPokemonDetails = async () => {
                 <!-- 選択タイプに基づいて詳細情報リストにフィルタをかける -->
                 <!-- 選択タイプはどこかに表示する -->
                 <!-- 既存のgetPokemonDetailsに選択タイプをわたすのがよさそう。指定なしの場合は全てにして。 -->
-                <GamifyButton>なにタイプがほしい？</GamifyButton>
+                <GamifyButton @click="onTypeColorDialogOpen()">なにタイプがほしい？</GamifyButton>
             </div>
         </div>
 
@@ -162,11 +168,7 @@ const getPokemonDetails = async () => {
         </GamifyList>
 
         <!-- 確認ダイアログ -->
-        <GamifyDialog 
-            v-if="dialog" 
-            id="confirm-catch" 
-            title="かくにん" 
-            :description="`ほう！　${dialog.name}　にするんじゃな？`"
+        <GamifyDialog v-if="dialog" id="confirm-catch" title="かくにん" :description="`ほう！　${dialog.name}　にするんじゃな？`"
             @close="onClose">
             <GamifyList :border="false" direction="horizon">
                 <GamifyItem>
@@ -177,7 +179,21 @@ const getPokemonDetails = async () => {
                 </GamifyItem>
             </GamifyList>
         </GamifyDialog>
-        
+
+        <!-- タイプ選択ダイアログ -->
+        <GamifyDialog v-if="typeColorDialog" id="confirm-catch" title="かくにん" :description="`タイプを２しゅるい えらぶのじゃ`"
+            @close="onTypeColorDialogClose">
+            <div class="type-selection-dialog-item">
+                <TypeColorWheel />
+                <TypeColorWheel />
+            </div>
+
+            <GamifyItem>
+                <GamifyButton @click="onTypeColorDialogClose">完了</GamifyButton>
+            </GamifyItem>
+
+        </GamifyDialog>
+
 
         <!-- <h2>ポケモン一覧</h2>
         <GamifyList>
@@ -192,6 +208,12 @@ const getPokemonDetails = async () => {
 
 <style scoped>
 .details-action-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 2px;
+}
+
+.type-selection-dialog-item {
     display: flex;
     align-items: center;
     margin-bottom: 2px;
