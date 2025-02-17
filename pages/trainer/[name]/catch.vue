@@ -9,7 +9,8 @@ const config = useRuntimeConfig();
 // ポケモンリスト
 var data = null;
 var pokemons = null;
-var pokemonsWithDetailsList = ref([]);
+var pokemonsWithDetailsListMaster = [];
+var pokemonsWithDetailsListToShow = ref([]);
 var types = null;
 var pokemonFrontDefaultImg = null;
 var pokemonBackDefaultImg = null;
@@ -64,7 +65,7 @@ finally {
         });
     }
     // ポケモン詳細情報リストを更新
-    pokemonsWithDetailsList.value = tmpInitialList;
+    pokemonsWithDetailsListToShow.value = tmpInitialList;
 
     if (pokemons == null) {
         console.log("ポケモンデータ取得できませんでした");
@@ -80,42 +81,45 @@ const { dialog, onOpen, onClose } = useDialog();
 const { typeColorDialog, onTypeColorDialogOpen, onTypeColorDialogClose } = useTypeColorDialogDialog();
 
 const getPokemonDetails = async () => {
-    // 更新前にクリア
-    pokemonsWithDetailsList.value = [];
-
     // ポケモン詳細情報取得
     try {
-        // 各ポケモンの詳細情報を取得して追加
-        console.log("各ポケモンの詳細情報を取得して追加")
-        var tmpList = [];
-        for (const pokemonResult of pokemons.value.results) {
-            console.log("URL: " + pokemonResult.url);
-            // ポケモンの詳細情報取得
-            const response = await fetch(
-                // URL
-                pokemonResult.url,
-            )
-            const detail = await response.json();
-            console.log("単純fetchのresponseをjson変換したもの: " + detail);
+        // すでに詳細ありの場合は再取得せずにfinallyのフィルタのみ実行
+        // todo: 詳細なし, 詳細あり, どちらもpokemonsWithDetailsListなのがややこしい。余力があったら分離する。
+        if (!isExistPokemonDetails.value) {
+            // 詳細なし一覧にpushすることがないように、初回は更新前にクリア
+            pokemonsWithDetailsListToShow.value = [];
 
-            // 取得した詳細情報から、タイプ、画像（前後）を取得
-            types = detail.types;
-            pokemonFrontDefaultImg = detail.sprites.front_default;
-            pokemonBackDefaultImg = detail.sprites.back_default;
+            // 各ポケモンの詳細情報を取得して追加
+            console.log("各ポケモンの詳細情報を取得して追加")
+            var tmpList = [];
+            for (const pokemonResult of pokemons.value.results) {
+                console.log("URL: " + pokemonResult.url);
+                // ポケモンの詳細情報取得
+                const response = await fetch(
+                    // URL
+                    pokemonResult.url,
+                )
+                const detail = await response.json();
+                console.log("単純fetchのresponseをjson変換したもの: " + detail);
 
-            // 一覧情報と詳細情報を結合してtmpリストに追加
-            tmpList.push({
-                ...pokemonResult,
-                types,
-                imgFront: pokemonFrontDefaultImg,
-                imgBack: pokemonBackDefaultImg,
-            });
-            pokemonsWithDetailsListLength.value = tmpList.length;
+                // 取得した詳細情報から、タイプ、画像（前後）を取得
+                types = detail.types;
+                pokemonFrontDefaultImg = detail.sprites.front_default;
+                pokemonBackDefaultImg = detail.sprites.back_default;
+
+                // 一覧情報と詳細情報を結合してtmpリストに追加
+                tmpList.push({
+                    ...pokemonResult,
+                    types,
+                    imgFront: pokemonFrontDefaultImg,
+                    imgBack: pokemonBackDefaultImg,
+                });
+                pokemonsWithDetailsListLength.value = tmpList.length;
+            }
+            // ポケモン詳細情報リストを更新
+            pokemonsWithDetailsListMaster = tmpList;
+            console.log("詳細情報: " + pokemonsWithDetailsListMaster);
         }
-
-        // ポケモン詳細情報リストを更新
-        pokemonsWithDetailsList.value = tmpList;
-        console.log("詳細情報: " + pokemonsWithDetailsList.value);
     }
     catch (err) {
         error.value = err;
@@ -125,7 +129,7 @@ const getPokemonDetails = async () => {
             console.log("選択されたタイプでフィルタリング");
             console.log("選択されたタイプ: " + selectedTypes);
             // フィルタリング
-            var filteredList = pokemonsWithDetailsList.value.filter((pokemon) => {
+            var filteredList = pokemonsWithDetailsListMaster.filter((pokemon) => {
                 var isMatched = false;
                 for (const type of pokemon.types) {
                     if (selectedTypes.includes(type.type.name)) {
@@ -135,11 +139,12 @@ const getPokemonDetails = async () => {
                 }
                 return isMatched;
             });
-            pokemonsWithDetailsList.value = filteredList;
-        }else{
+            pokemonsWithDetailsListToShow.value = filteredList;
+        } else {
             console.log("選択されたタイプがないので全て表示");
+            pokemonsWithDetailsListToShow.value = pokemonsWithDetailsListMaster;
         }
-        
+
         // 詳細取得済フラグを立てる
         isExistPokemonDetails.value = true;
     }
@@ -174,10 +179,7 @@ const clearSelectedTypes = () => {
             <GamifyButton @click="getPokemonDetails()">くわしく GETだぜ</GamifyButton>
             <!-- ポケモン詳細情報を取得するボタン -->
             <div v-if="isExistPokemonDetails">
-                <!-- TODO -->
-                <!-- 選択タイプはどこかに表示する -->
-                <!-- 既存のgetPokemonDetailsに選択タイプをわたすのがよさそう。指定なしの場合は全てにして。 -->
-                <GamifyButton @click="() => {clearSelectedTypes(); onTypeColorDialogOpen()}">なにタイプがほしい？</GamifyButton>
+                <GamifyButton @click="() => { clearSelectedTypes(); onTypeColorDialogOpen() }">なにタイプがほしい？</GamifyButton>
                 <span>選択タイプ: {{ selectedTypes }}</span>
             </div>
         </div>
@@ -185,7 +187,7 @@ const clearSelectedTypes = () => {
         <!-- ポケモン一覧 -->
         <h2>ポケモン一覧</h2>
         <GamifyList>
-            <GamifyItem v-for="(pokemonWithDetails, id) in pokemonsWithDetailsList" :key="id">
+            <GamifyItem v-for="(pokemonWithDetails, id) in pokemonsWithDetailsListToShow" :key="id">
                 <div v-if="pokemonWithDetails.imgFront">
                     <img :src="pokemonWithDetails.imgFront" alt="ポケモンフロント画像">
                     <img :src="pokemonWithDetails.imgBack" alt="ポケモンバック画像">
@@ -215,7 +217,7 @@ const clearSelectedTypes = () => {
 
         <!-- タイプ選択ダイアログ -->
         <GamifyDialog v-if="typeColorDialog" id="confirm-catch" title="かくにん" :description="`タイプを２しゅるい えらぶのじゃ`"
-            @close="() => {clearSelectedTypes(); onTypeColorDialogClose()}">
+            @close="() => { clearSelectedTypes(); onTypeColorDialogClose() }">
             <div class="type-selection-dialog-item">
                 <TypeColorWheel @select-types="selectTypesEvent" />
             </div>
