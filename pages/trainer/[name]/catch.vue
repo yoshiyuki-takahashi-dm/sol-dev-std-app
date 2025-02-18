@@ -196,14 +196,14 @@ const clearSelectedTypes = () => {
                 <span class="pokemon-name">
                     {{ pokemonWithDetails.name }}
                 </span>
-                <!-- 選択タイプを空にしてからダイアログを開く -->
+                <!-- ダイアログを開く -->
                 <GamifyButton @click="onOpen(pokemonWithDetails.name);">つかまえる</GamifyButton>
                 <!-- {{ pokemonWithDetails }} -->
             </GamifyItem>
         </GamifyList>
 
         <!-- 確認ダイアログ -->
-        <GamifyDialog v-if="dialog" id="confirm-catch" title="かくにん" :description="`ほう！　${dialog.name}　にするんじゃな？`"
+        <GamifyDialog v-if="dialog" id="confirm-catch" title="かくにん" :description="`ほう！　${dialog}　にするんじゃな？`"
             @close="onClose">
             <GamifyList :border="false" direction="horizon">
                 <GamifyItem>
