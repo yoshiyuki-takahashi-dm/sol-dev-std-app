@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { findTrainers, upsertTrainer } from "~/server/utils/trainer";
+import { findTrainers, findTrainer, upsertTrainer } from "~/server/utils/trainer";
 import { findPokemon, getPokemonList } from "~/server/utils/pokemon";
 
 const router = Router();
@@ -54,6 +54,9 @@ router.post("/trainer/:trainerName", async (req, res, next) => {
 // TODO: トレーナーを削除する API エンドポイントの実装
 
 /** ポケモンの一覧取得 */
+// expressからPokeAPIの確認で一覧取得APIを自前で実装
+// やはりうまくいかなかった
+// 原因不明
 router.get("/pokemonList", async (_req, res, next) => {
   try {
     const pokemons = await getPokemonList();
@@ -77,6 +80,41 @@ router.post("/trainer/:trainerName/pokemon", async (req, res, next) => {
     const pokemon = await findPokemon(req.body.name);
     // TODO: 削除系 API エンドポイントを利用しないかぎりポケモンは保持する
     const result = await upsertTrainer(trainerName, { pokemons: [pokemon] });
+    res.status(result["$metadata"].httpStatusCode).send(result);
+  } catch (err) {
+    next(err);
+  }
+});
+
+/** ポケモンの追加 */
+// ポケモン情報はフロントで取得しておいてreq.body経由で受け取る
+// トレーナー情報はパスパラメータから取得
+router.post("/trainer/:trainerName/pokemon/frontget", async (req, res, next) => {
+  try {
+    console.log("POST /trainer/:trainerName/pokemon/frontget に到達しました")
+    const { trainerName } = req.params;
+    const trainer = await findTrainer(trainerName);
+
+
+    // リクエストボディにポケモン情報が含まれていなければ400を返す
+    if (!("pokemon" in req.body))
+      return res.sendStatus(400);
+
+    let pokemon = req.body.pokemon;
+
+    // トレーナーのポケモン情報につかまえたポケモンを追加
+    // idは連番になるように生成
+    trainer.pokemons.push({
+      id: (trainer.pokemons[trainer.pokemons.length - 1]?.id ?? 0) + 1,
+      nickname: "",
+      order: pokemon.order,
+      name: pokemon.name,
+      sprites: pokemon.img,
+    });
+
+    // TODO: 削除系 API エンドポイントを利用しないかぎりポケモンは保持する
+    const result = await upsertTrainer(trainerName, { pokemons: [pokemon] });
+    console.log("upsertTrainer result: " + result)
     res.status(result["$metadata"].httpStatusCode).send(result);
   } catch (err) {
     next(err);

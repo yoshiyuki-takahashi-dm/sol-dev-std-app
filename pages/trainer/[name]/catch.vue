@@ -45,7 +45,6 @@ try {
             server: false,
         },
     );
-
 }
 catch (err) {
     error.value = err;
@@ -160,6 +159,47 @@ const selectTypesEvent = (selectTypes) => {
 const clearSelectedTypes = () => {
     console.log("選択タイプを空にします");
     selectedTypes = [];
+};
+
+// ぽけもんをつかまえる
+// フロントでポケモン情報を取得しておいて、bodyにつめて、バックエンドにポストする
+const onCatch = async (pokemonName) => {
+    console.log("pokemon frontget開始：" + pokemonName);
+    // ぽけもん取得
+    // ポケモンの詳細情報取得
+    const responsePokemon = await fetch(
+        // URL
+        `https://pokeapi.co/api/v2/pokemon/${pokemonName}`,
+    )
+    const responsePokemonJson = await responsePokemon.json();
+
+    console.log("ぽけもんの名前指定で取得した情報: " + responsePokemonJson);
+
+    // responsePokemonJsonをすべてbodyにつめると重いので、必要な情報だけつめる
+    // 実際、重いってエラーが出てfetchできなかった
+    const {
+      order,
+      name,
+    } = responsePokemonJson;
+
+    console.log("トレーナー名：" + route.params.name)+"がポケモンをつかまえるよ";
+    const response = await $fetch(`/api/trainer/${route.params.name}/pokemon/frontget`, {
+        baseURL: config.public.backendOrigin,
+        method: "POST",
+        body: {
+            pokemon: {
+                "order": order,
+                "name": name,
+                "img": responsePokemonJson.sprites.front_default,
+            },
+        },
+    }).catch((e) => e);
+    if (response instanceof Error) return;
+
+    console.log("ぽけもんつかまえる 結果" + response)
+
+    // 問題なくS3に保存できればトレーナーページに戻る
+    router.push(`/trainer/${route.params.name}`);
 };
 
 </script>

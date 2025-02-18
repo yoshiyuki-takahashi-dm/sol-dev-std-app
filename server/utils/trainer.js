@@ -1,5 +1,6 @@
 import {
   ListObjectsCommand,
+  GetObjectCommand,
   PutObjectCommand,
   S3Client,
 } from "@aws-sdk/client-s3";
@@ -25,7 +26,18 @@ export const findTrainers = async () => {
 };
 
 /** トレーナーの取得 */
-// TODO: トレーナーを取得する S3 クライアント処理の実装
+// S3 クライアント処理の実装
+// 指定のトレーナー名.jsonデータを取得する
+export const findTrainer = async (name) => {
+  const object = await s3Client.send(
+    new GetObjectCommand({
+      Bucket: config.bucketName,
+      Key: `${name}.json`,
+    }),
+  );
+  const trainer = JSON.parse(await object.Body.transformToString());
+  return trainer;
+};
 
 /** トレーナーの追加更新 */
 // サーバーエンドからS3にアクセスする
@@ -36,9 +48,10 @@ export const upsertTrainer = async (name, trainer) => {
   console.log("Request Body Name: " + name)
   console.log("Request Body: " + trainer)
 
+  // Question: BodyのJson.stringifyの中身がよくわからない。pokemonsは[]なのになぜ中身がはいるのか
   const result = await s3Client.send(
     new PutObjectCommand({
-      Bucket: config.bucketName, // nuxt.config.jsだとしたらbucketName: ""だけど、どこでaws configのほうを見に行っている？
+      Bucket: config.bucketName, // Question：nuxt.config.jsだとしたらbucketName: ""だけど、どこでaws configのほうを見に行っている？
       Key: `${name}.json`,
       Body: JSON.stringify({ name: "", pokemons: [], ...trainer }),
     }),
