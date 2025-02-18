@@ -207,7 +207,7 @@ const onCatch = async (pokemonName) => {
 <template>
     <div>
         <h1>ポケモンをつかまえる画面だよ</h1>
-        <h2>次やること：ポケモンGetしてS3に保存。MAX1034件詳細取得でも遅く感じさせない仕組み</h2>
+        <h2>次やること：Getしたポケモンを保持。MAX1034件詳細取得でも遅く感じさせない仕組み</h2>
         <h3>{{ pokemons.count }} しゅるいのポケモン</h3>
         <h3>{{ pokemonsWithDetailsListLength }} / {{ pokemons.count }} 取得済</h3>
         <div v-if="loading">読み込み中...</div>
