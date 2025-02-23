@@ -3,14 +3,24 @@ import { useRoute } from 'vue-router';
 import CatchButton from '~/components/CatchButton.vue';
 
 const route = useRoute();
-const trainer = route.params.name; // パスパラメータからnameを取得
-console.log("Trainer: " + trainer);
+const config = useRuntimeConfig();
+
+const trainerName = route.params.name; // パスパラメータからnameを取得
+const {data: trainer} = await useFetch(
+  () => `/api/trainer/${trainerName}`,
+  {
+    default: () => [],
+    server: false,
+    baseUrl: config.public.backendOrigin,
+  },
+);
+console.log("Trainer Pokemons: " + trainer.pokemons);
 </script>
 
 <template>
   <div>
     <!-- タイトル　トレーナー名表示 -->
-    <h1>やあ {{ trainer }} ！　ぼうけん　を　はじめよう</h1>
+    <h1>やあ {{ trainerName }} ！　ぼうけん　を　はじめよう</h1>
 
     <!-- アバター画像 -->
     <div>
@@ -31,9 +41,10 @@ console.log("Trainer: " + trainer);
 
     <!-- てもちぽけもん リスト-->
     <GamifyList>
-      <!-- <GamifyItem v-for="trainer in trainers" :key="trainer">
-        <NuxtLink :to="`/trainer/${trainer}`">{{ trainer }}</NuxtLink>
-      </GamifyItem> -->
+      <GamifyItem v-for="pokemon in trainer.pokemons" :key="pokemon.id">
+        <img :src="pokemon.sprites" alt="ポケモンフロント画像">
+        <span>{{pokemon.name}}</span>
+      </GamifyItem>
     </GamifyList>
 
 

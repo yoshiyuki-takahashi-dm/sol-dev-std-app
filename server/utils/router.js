@@ -36,7 +36,18 @@ router.post("/trainer", async (req, res, next) => {
 });
 
 /** トレーナーの取得 */
-// TODO: トレーナーを取得する API エンドポイントの実装
+// パスパラメータで受けたトレーナー名を使ってfindTrainerを実行
+router.get("/trainer/:trainerName", async (req, res, next) => {
+  console.log("router /trainer/:trainerName")
+  try {
+    const { trainerName } = req.params;
+    console.log(trainerName)
+    const trainer = await findTrainer(trainerName);
+    res.send(trainer);
+  } catch (err) {
+    next(err);
+  }
+});
 
 /** トレーナーの更新 */
 router.post("/trainer/:trainerName", async (req, res, next) => {
@@ -112,8 +123,8 @@ router.post("/trainer/:trainerName/pokemon/frontget", async (req, res, next) => 
       sprites: pokemon.img,
     });
 
-    // TODO: 削除系 API エンドポイントを利用しないかぎりポケモンは保持する
-    const result = await upsertTrainer(trainerName, { pokemons: [pokemon] });
+    // const result = await upsertTrainer(trainerName, { pokemons: [pokemon] });
+    const result = await upsertTrainer(trainerName, trainer);
     console.log("upsertTrainer result: " + result)
     res.status(result["$metadata"].httpStatusCode).send(result);
   } catch (err) {
