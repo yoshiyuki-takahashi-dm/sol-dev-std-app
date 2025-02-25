@@ -30,8 +30,8 @@ import GamifyButton from '~/components/GamifyButton.vue';
     </div>
 
     <!-- デモモードボタン -->
-    <GamifyButton @click="{onStartDemo(); console.log(trainers)}" >デモにする</GamifyButton>
-    <GamifyButton @click="{onEndDemo(); console.log(trainers)}" >デモにしない</GamifyButton>
+    <!-- <GamifyButton @click="{onStartDemo(); console.log(trainers)}" >デモにする</GamifyButton>
+    <GamifyButton @click="{onEndDemo(); console.log(trainers)}" >デモにしない</GamifyButton> -->
     
     <!-- ポケモンリストを取得できたかコンソールに出すボタン -->
     <!-- <GamifyButton @click="console.log(pokemonList)" >ポケモンリストを取得</GamifyButton> -->
@@ -53,7 +53,7 @@ import GamifyButton from '~/components/GamifyButton.vue';
 <!-- この画面だけに効くstyle -->
 <style scoped>
 .start-trainer-img{
-  width: 50%; /* 親要素の幅に合わせる */
+  width: 35%; /* 親要素の幅に合わせる */
   height: auto; /* アスペクト比を維持 */
 }
 .start-content {

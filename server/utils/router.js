@@ -123,7 +123,7 @@ router.post("/trainer/:trainerName/pokemon/frontget", async (req, res, next) => 
       sprites: pokemon.img,
     });
 
-    // const result = await upsertTrainer(trainerName, { pokemons: [pokemon] });
+    // トレーナー情報を更新
     const result = await upsertTrainer(trainerName, trainer);
     console.log("upsertTrainer result: " + result)
     res.status(result["$metadata"].httpStatusCode).send(result);
@@ -133,6 +133,29 @@ router.post("/trainer/:trainerName/pokemon/frontget", async (req, res, next) => 
 });
 
 /** ポケモンの削除 */
-// TODO: ポケモンを削除する API エンドポイントの実装
+router.post("/trainer/:trainerName/pokemon/delete", async (req, res, next) => {
+  try {
+    console.log("POST /trainer/:trainerName/pokemon/frontget に到達しました")
+    const { trainerName } = req.params;
+    const trainer = await findTrainer(trainerName);
+
+    // リクエストボディにポケモン情報が含まれていなければ400を返す
+    if (!("pokemon" in req.body))
+      return res.sendStatus(400);
+
+    // リクエストボディからポケモン情報を取得
+    let pokemon = req.body.pokemon;
+
+    // トレーナーのポケモン情報から選択したポケモンを削除
+    trainer.pokemons = trainer.pokemons.filter(p => p.name !== pokemon.name);
+
+    // トレーナー情報を更新
+    const result = await upsertTrainer(trainerName, trainer);
+    console.log("upsertTrainer result: " + result)
+    res.status(result["$metadata"].httpStatusCode).send(result);
+  } catch (err) {
+    next(err);
+  }
+});
 
 export default router;
