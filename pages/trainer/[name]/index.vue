@@ -98,7 +98,7 @@ const onGoBackPalletTown = async () => {
     </div>
 
     <!-- トレーナー削除ボタン -->
-    <GamifyButton @click="onGoBackPalletTown()">マサラタウンにかえる（未実装）</GamifyButton>
+    <GamifyButton @click="onGoBackPalletTown()">マサラタウンにかえる</GamifyButton>
 
     <!-- てもちぽけもん タイトル-->
     <h1>てもちポケモン</h1>
