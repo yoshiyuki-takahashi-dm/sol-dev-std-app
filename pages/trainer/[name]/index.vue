@@ -6,15 +6,25 @@ const route = useRoute(); // 現在のルート情報にアクセスするため
 const router = useRouter(); // ルーターを使うためのフック
 const config = useRuntimeConfig();
 
+// トレーナー情報 リアクティブ変数にして更新して画面描画できるようにする
+const trainer = ref(null);
+
 const trainerName = route.params.name; // パスパラメータからnameを取得
-const { data: trainer } = await useFetch(
-  () => `/api/trainer/${trainerName}`,
-  {
-    default: () => [],
-    server: false,
-    baseUrl: config.public.backendOrigin,
-  },
-);
+const fetchTrainerData = async () => {
+  const { data } = await useFetch(
+    () => `/api/trainer/${trainerName}`,
+    {
+      default: () => [],
+      server: false,
+      baseUrl: config.public.backendOrigin,
+    },
+  );
+  trainer.value = data;
+}
+// トレーナー情報取得
+// awaitにしておかないと画面描画時にデータが取得される前に画面が描画されてしまう
+await fetchTrainerData();
+
 // ダイアログのカスタムフック
 const { dialog, onOpen, onClose } = useDialog();
 
@@ -52,8 +62,11 @@ const onByebye = async (pokemonName) => {
 
   console.log("ぽけもんByebye 結果" + response)
 
-  // 問題なくS3に保存できればダイアログを閉じて画面再描画する
+  // 問題なくS3に保存できてここに到達したらダイアログを閉じて画面再描画する
+  // Question: dialog.valueをnullにしてリアクティブ変数に変更があったのに画面再描画されないのはなぜ？
   onClose();
+  // トレーナー情報を再取得することで関連するポケモンリストのコンポーネントを再描画する
+  await fetchTrainerData();
 };
 </script>
 
@@ -81,7 +94,7 @@ const onByebye = async (pokemonName) => {
 
     <!-- てもちぽけもん リスト-->
     <GamifyList>
-      <GamifyItem v-for="pokemon in trainer.pokemons" :key="pokemon.id">
+      <GamifyItem v-for="pokemon in trainer.value.pokemons" :key="pokemon.id">
         <img :src="pokemon.sprites" alt="ポケモンフロント画像">
         <span>{{ pokemon.name }}</span>
         <GamifyButton @click="onOpen(pokemon.name)">オーキド博士おくり</GamifyButton>
