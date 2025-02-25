@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { findTrainers, findTrainer, upsertTrainer } from "~/server/utils/trainer";
+import { findTrainers, findTrainer, upsertTrainer, deleteTrainer } from "~/server/utils/trainer";
 import { findPokemon, getPokemonList } from "~/server/utils/pokemon";
 
 const router = Router();
@@ -26,7 +26,10 @@ router.get("/trainers", async (_req, res, next) => {
 router.post("/trainer", async (req, res, next) => {
   console.log("POST /trainer に到達しました")
   try {
-    // TODO: リクエストボディにトレーナー名が含まれていなければ400を返す
+    // リクエストボディにトレーナー名が含まれていなければ400を返す
+    if (req.body.name === undefined)
+      return res.sendStatus(400);
+    
     // TODO: すでにトレーナー（S3 オブジェクト）が存在していれば409を返す
     const result = await upsertTrainer(req.body.name, req.body);
     res.status(result["$metadata"].httpStatusCode).send(result);
@@ -62,7 +65,16 @@ router.post("/trainer/:trainerName", async (req, res, next) => {
 });
 
 /** トレーナーの削除 */
-// TODO: トレーナーを削除する API エンドポイントの実装
+router.post("/trainer/:trainerName/delete", async (req, res, next) => {
+  try {
+    const { trainerName } = req.params;
+    // await 忘れると結果を待たずにresultの中身見ようとしてエラーになるので注意
+    const result = await deleteTrainer(trainerName);
+    res.status(result["$metadata"].httpStatusCode).send(result);
+  }catch (err) {
+    next(err);
+  }
+});
 
 /** ポケモンの一覧取得 */
 // expressからPokeAPIの確認で一覧取得APIを自前で実装
@@ -87,9 +99,11 @@ router.get("/pokemonList", async (_req, res, next) => {
 router.post("/trainer/:trainerName/pokemon", async (req, res, next) => {
   try {
     const { trainerName } = req.params;
-    // TODO: リクエストボディにポケモン名が含まれていなければ400を返す
+    // リクエストボディにポケモン名が含まれていなければ400を返す
+    if (req.body.name === undefined)
+      return res.sendStatus(400);
+
     const pokemon = await findPokemon(req.body.name);
-    // TODO: 削除系 API エンドポイントを利用しないかぎりポケモンは保持する
     const result = await upsertTrainer(trainerName, { pokemons: [pokemon] });
     res.status(result["$metadata"].httpStatusCode).send(result);
   } catch (err) {

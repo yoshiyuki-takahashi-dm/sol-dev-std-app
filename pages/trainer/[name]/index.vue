@@ -68,6 +68,23 @@ const onByebye = async (pokemonName) => {
   // トレーナー情報を再取得することで関連するポケモンリストのコンポーネントを再描画する
   await fetchTrainerData();
 };
+
+const onGoBackPalletTown = async () => {
+  console.log("マサラタウンにかえる");
+
+  // ポケモンを削除してトレーナー情報を更新する
+  const response = await $fetch(`/api/trainer/${trainerName}/delete`, {
+    baseURL: config.public.backendOrigin,
+    method: "POST",
+    body: {
+    },
+  }).catch((e) => e);
+  if (response instanceof Error) return;
+
+  // 問題なくS3に保存できてここに到達したらホーム画面に戻る
+  console.log(trainerName + "は マサラタウン に かえりました");
+  router.push("/");
+}
 </script>
 
 <template>
@@ -81,7 +98,7 @@ const onByebye = async (pokemonName) => {
     </div>
 
     <!-- トレーナー削除ボタン -->
-    <GamifyButton>マサラタウンにかえる（未実装）</GamifyButton>
+    <GamifyButton @click="onGoBackPalletTown()">マサラタウンにかえる（未実装）</GamifyButton>
 
     <!-- てもちぽけもん タイトル-->
     <h1>てもちポケモン</h1>

@@ -2,6 +2,7 @@ import {
   ListObjectsCommand,
   GetObjectCommand,
   PutObjectCommand,
+  DeleteObjectCommand,
   S3Client,
 } from "@aws-sdk/client-s3";
 import { NodeHttpHandler } from "@smithy/node-http-handler";
@@ -60,4 +61,25 @@ export const upsertTrainer = async (name, trainer) => {
 };
 
 /** トレーナーの削除 */
-// TODO: トレーナーを削除する S3 クライアント処理の実装
+export const deleteTrainer = async (name) => {
+  console.log("Execute deleteTrainer: " + name)
+
+  try {
+    const result = await s3Client.send(
+      new DeleteObjectCommand({
+        Bucket: config.bucketName,
+        Key: `${name}.json`,
+      }),
+    );
+
+    // 結果のメタデータを確認
+    console.log("DeleteObjectCommand result:", result);
+    console.log("HTTP Status Code:", result.$metadata.httpStatusCode);
+    console.log("Request ID:", result.$metadata.requestId);
+
+    return result;
+  } catch (error) {
+    console.error("Error deleting trainer:", error);
+    throw error;
+  }
+}
