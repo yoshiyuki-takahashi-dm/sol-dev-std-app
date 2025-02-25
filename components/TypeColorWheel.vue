@@ -1,23 +1,3 @@
-<template>
-    <div class="type-color-wheel">
-        <div v-for="(type, index) in types" :key="index"
-            :style="{ backgroundColor: typeColors[type], transform: `rotate(${index * 20}deg) translate(100px) rotate(-${index * 20}deg)`, border: selectedTypes.includes(type) ? '2px solid black' : 'none' }"
-            class="color-segment"
-            @mouseover="showTooltip(type, $event)"
-            @mousemove="updateTooltipPosition($event)"
-            @mouseleave="hideTooltip"
-            @click="selectType(type)"></div>
-        <div v-if="tooltip.visible" :style="{ top: tooltip.y + 'px', left: tooltip.x + 'px' }" class="tooltip">
-            {{ tooltip.text }}
-        </div>
-        <div class="selected-types">
-            <div v-for="(type, index) in selectedTypes" :key="index" class="selected-type">
-                {{ type }}
-            </div>
-        </div>
-    </div>
-</template>
-
 <script setup>
 import { ref } from 'vue';
 
@@ -111,6 +91,26 @@ const typeClickHandle = () => {
 };
 
 </script>
+
+<template>
+    <div class="type-color-wheel">
+        <div v-for="(type, index) in types" :key="index"
+            :style="{ backgroundColor: typeColors[type], transform: `rotate(${index * 20}deg) translate(100px) rotate(-${index * 20}deg)`, border: selectedTypes.includes(type) ? '2px solid black' : 'none' }"
+            class="color-segment"
+            @mouseover="showTooltip(type, $event)"
+            @mousemove="updateTooltipPosition($event)"
+            @mouseleave="hideTooltip"
+            @click="selectType(type)"></div>
+        <div v-if="tooltip.visible" :style="{ top: tooltip.y + 'px', left: tooltip.x + 'px' }" class="tooltip">
+            {{ tooltip.text }}
+        </div>
+        <div class="selected-types">
+            <div v-for="(type, index) in selectedTypes" :key="index" class="selected-type">
+                {{ type }}
+            </div>
+        </div>
+    </div>
+</template>
 
 <style scoped>
 .type-color-wheel {
