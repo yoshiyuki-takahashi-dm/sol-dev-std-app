@@ -30,14 +30,14 @@ const offset = 0;
 // ポケモン一覧取得時のリミット
 // 指定しないと20になって少ない
 // MAXほしい場合は1034に設定
-const limit = 100;
+const numberOfGetDetails = ref(100);
 
 // ポケモン一覧取得
 try {
     data = await useFetch(
         () =>
             // ポケモン一覧取得API. offsetとlimitで取得範囲を指定
-            `https://pokeapi.co/api/v2/pokemon?offset=${offset}&limit=${limit}`,
+            `https://pokeapi.co/api/v2/pokemon?offset=${offset}&limit=${numberOfGetDetails.value}`,
         {
             default: () => [],
             // false: リクエストをクライアントサイドのみで行う
@@ -82,9 +82,9 @@ const { typeColorDialog, onTypeColorDialogOpen, onTypeColorDialogClose } = useTy
 const getPokemonDetails = async () => {
     // ポケモン詳細情報取得
     try {
-        // すでに詳細ありの場合は再取得せずにfinallyのフィルタのみ実行
+        // すでにある詳細数と詳細取得数が同じ場合は再取得せずにfinallyのフィルタのみ実行
         // todo: 詳細なし, 詳細あり, どちらもpokemonsWithDetailsListなのがややこしい。余力があったら分離する。
-        if (!isExistPokemonDetails.value) {
+        if (pokemonsWithDetailsListMaster.length != numberOfGetDetails.value) {
             // 詳細なし一覧にpushすることがないように、初回は更新前にクリア
             pokemonsWithDetailsListToShow.value = [];
 
@@ -118,6 +118,8 @@ const getPokemonDetails = async () => {
             // ポケモン詳細情報リストを更新
             pokemonsWithDetailsListMaster = tmpList;
             console.log("詳細情報: " + pokemonsWithDetailsListMaster);
+        }else{
+            console.log("すでに" + numberOfGetDetails.value + "件は詳細取得済みです");
         }
     }
     catch (err) {
@@ -207,8 +209,9 @@ const onCatch = async (pokemonName) => {
 <template>
     <div>
         <h1>ポケモンをつかまえる画面だよ</h1>
-        <h2>次やること：詳細取得数をインプットできるように。MAX1034件詳細取得でも遅く感じさせない仕組み</h2>
-        <h3>{{ pokemons.count }} しゅるいのポケモン</h3>
+        <h3>{{ pokemons.count }} しゅるい の ポケモン が いるよ</h3>
+        <h4>詳細取得 したい 数 を 入力して ください</h4>
+        <input type="number" v-model="numberOfGetDetails" placeholder="詳細取得したい数を入力してください" @keydown.enter="onOpen(true)">
         <h3>{{ pokemonsWithDetailsListLength }} / {{ pokemons.count }} 取得済</h3>
         <div v-if="loading">読み込み中...</div>
         <div v-else-if="error">エラーが発生しました: {{ error.message }}</div>
@@ -238,7 +241,6 @@ const onCatch = async (pokemonName) => {
                 </span>
                 <!-- ダイアログを開く -->
                 <GamifyButton @click="onOpen(pokemonWithDetails.name);">つかまえる</GamifyButton>
-                <!-- {{ pokemonWithDetails }} -->
             </GamifyItem>
         </GamifyList>
 

@@ -113,7 +113,7 @@ const onGoBackPalletTown = async () => {
     <GamifyList>
       <GamifyItem v-for="pokemon in trainer.value.pokemons" :key="pokemon.id">
         <img :src="pokemon.sprites" alt="ポケモンフロント画像">
-        <span>{{ pokemon.name }}</span>
+        <span class="pokemon-name">{{ pokemon.name }}</span>
         <GamifyButton @click="onOpen(pokemon.name)">オーキド博士おくり</GamifyButton>
       </GamifyItem>
     </GamifyList>
