@@ -4,6 +4,7 @@
             :style="{ backgroundColor: typeColors[type], transform: `rotate(${index * 20}deg) translate(100px) rotate(-${index * 20}deg)`, border: selectedTypes.includes(type) ? '2px solid black' : 'none' }"
             class="color-segment"
             @mouseover="showTooltip(type, $event)"
+            @mousemove="updateTooltipPosition($event)"
             @mouseleave="hideTooltip"
             @click="selectType(type)"></div>
         <div v-if="tooltip.visible" :style="{ top: tooltip.y + 'px', left: tooltip.x + 'px' }" class="tooltip">
@@ -67,6 +68,12 @@ const showTooltip = (text, event) => {
     tooltip.value.x = event.clientX + 15; // マウスカーソルの少し右に表示
     tooltip.value.y = event.clientY + 15; // マウスカーソルの少し下に表示
     tooltip.value.visible = true;
+};
+
+// ツールチップの位置を更新する関数
+const updateTooltipPosition = (event) => {
+    tooltip.value.x = event.clientX + 15; // マウスカーソルの少し右に表示
+    tooltip.value.y = event.clientY + 15; // マウスカーソルの少し下に表示
 };
 
 // ツールチップを非表示にする関数

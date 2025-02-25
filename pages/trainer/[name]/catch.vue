@@ -261,7 +261,7 @@ const onCatch = async (pokemonName) => {
         <GamifyDialog v-if="typeColorDialog" id="confirm-catch" title="かくにん" :description="`タイプを２しゅるい えらぶのじゃ`"
             @close="() => { clearSelectedTypes(); onTypeColorDialogClose() }">
             <div class="type-selection-dialog-item">
-                <TypeColorWheel @select-types="selectTypesEvent" />
+                <TypeColorWheel @select-types="selectTypesEvent" class="dialog"/>
             </div>
 
             <GamifyItem>
